@@ -1,0 +1,66 @@
+#!/bin/bash
+
+export PROJECTNAME="."
+
+# TO DO : test $PROJECTNAME
+echo "the project location is : $PROJECTNAME"
+echo "removing libs"
+vdel -lib $PROJECTNAME/LIB/LIB_AES -all
+vdel -lib $PROJECTNAME/LIB/LIB_RTL -all
+vdel -lib $PROJECTNAME/LIB/LIB_BENCH -all
+
+echo "creating library "
+vlib $PROJECTNAME/LIB/LIB_AES
+vmap LIB_AES $PROJECTNAME/LIB/LIB_AES
+vlib $PROJECTNAME/LIB/LIB_RTL
+vmap LIB_RTL $PROJECTNAME/LIB/LIB_RTL
+vlib $PROJECTNAME/LIB/LIB_BENCH
+vmap LIB_BENCH $PROJECTNAME/LIB/LIB_BENCH
+
+echo "compile third party library"
+vcom -work LIB_AES $PROJECTNAME/SRC/THIRDPARTY/state_definition_package.vhd
+
+echo "compile vhdl sources"
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/Counter.vhd
+#A compléter
+#FSM_AES.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/s_box.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvSubBytes.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvShiftRows.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvAddRoundKey.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvMixColumn.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvMixColumns.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/KeyExpansion_table.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/Counter.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/FSM_InvAES.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/Conv.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvConv.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/RegSel.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/Reg_i.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvAESRound.vhd
+vcom -work LIB_RTL $PROJECTNAME/SRC/RTL/InvAES.vhd
+
+echo "compile vhdl test bench"
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/s_box_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvSubBytes_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvShiftRows_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvAddRoundKey_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvMixColumn_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvMixColumns_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/Counter_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/KeyExpansion_table_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/Counter_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/FSM_Counter_InvAES_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/FSM_InvAES_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/Conv_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvConv_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/RegSel_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/Reg_i_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvAESRound_tb.vhd
+vcom -work LIB_BENCH $PROJECTNAME/SRC/BENCH/InvAES_tb.vhd
+
+echo "compilation finished"
+
+echo "start simulation..."
+# ATTENTION un seul VSIM decommenté à la fois!
+vsim  LIB_BENCH.InvAES_tb &

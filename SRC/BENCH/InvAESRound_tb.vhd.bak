@@ -1,0 +1,59 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.numeric_std.all;
+library LIB_RTL;
+library LIB_AES;
+use LIB_AES.state_definition_package.all;
+
+entity InvAESRound_tb is 
+end InvAESRound_tb;
+
+architecture InvAESRound_tb_arch of InvAESRound_tb is 
+	component InvAESRound
+		port(
+			data_i : in type_state;
+			key_Round_i : in type_state;
+			round_enable_i : in std_logic;
+			clk_i : in std_logic;
+			reset_i : in std_logic;
+			enable_InvMixColumns_i : in std_logic;
+			data_o : out type_state
+		);
+	end component; 
+	signal data_i_s : type_state;
+	signal key_Round_s: type_state;
+	signal round_enable_s : std_logic;
+	signal clk_s : std_logic := '0';
+	signal reset_s : std_logic;
+	signal enable_InvMixColumns_s : std_logic;
+	signal data_o_s : type_state;
+begin
+	DUT : InvAESRound
+		port map(
+			data_i => data_i_s,
+			key_Round_i => key_Round_s,
+			round_enable_i =>round_enable_s,
+			clk_i => clk_s,
+			reset_i => reset_s,
+			enable_InvMixColumns_i => enable_InvMixColumns_s,
+			data_o => data_o_s
+		);
+	
+	data_i_s <= ((X"8c", X"11", X"35", X"44"), (X"06", X"ad", X"44", X"88"), (X"de", X"ca", X"ec", X"83"), (X"b0", X"03", X"43", X"06"));
+   key_Round_s <= ((X"e7", X"05", X"10", X"0b"), (X"8e", X"80", X"42", X"7e"), (X"78", X"4d", X"9b", X"0e"),(X"71", X"1a", X"e1", X"65"));
+
+	clk_s <=  not clk_s after 5 ns;	 
+	reset_s <= '1', '0' after 10 ns;
+   round_enable_s <= '1','0' after 10 ns;
+	enable_InvMixColumns_s <= '0', '1' after 10 ns;	
+end InvAESRound_tb_arch;
+
+configuration InvAESRound_tb_conf of InvAESRound_tb is
+	for InvAESRound_tb_arch
+		for DUT : InvAESRound
+			  	 use entity LIB_RTL.InvAESRound(InvAESRound_arch);
+		end for;
+	end for;
+end InvAESRound_tb_conf;
+
+

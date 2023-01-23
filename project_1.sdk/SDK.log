@@ -1,0 +1,6 @@
+22:48:59 INFO  : Registering command handlers for SDK TCF services
+22:49:00 INFO  : Launching XSCT server: xsct.bat -interactive C:\Users\eleves\Documents\Embedded-System-Design-Flow-on-Zynq\projet_invaes\project_1\project_1.sdk\temp_xsdb_launch_script.tcl
+22:49:07 INFO  : XSCT server has started successfully.
+22:49:09 INFO  : Successfully done setting XSCT server connection channel  
+22:49:09 INFO  : Successfully done setting SDK workspace  
+22:49:09 INFO  : Processing command line option -hwspec C:/Users/eleves/Documents/Embedded-System-Design-Flow-on-Zynq/projet_invaes/project_1/project_1.sdk/design_1_wrapper.hdf.
